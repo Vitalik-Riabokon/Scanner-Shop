@@ -1,0 +1,15 @@
+services:
+  web:
+    build:
+      dockerfile: Dockerfile
+    container_name: Shop_Scanner
+    env_file:
+      - .env
+    ports:
+      - ${DJANGO_PORT_HOST}:${DJANGO_PORT}
+    volumes:
+      - .:/app
+      - ./data:/app/db.sqlite3
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+

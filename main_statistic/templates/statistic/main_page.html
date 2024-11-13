@@ -1,0 +1,46 @@
+{% extends 'statistic/../base.html' %}
+
+{% block title %}Головна сторінка{% endblock %}
+
+
+{% block content %}
+    <div class="main_notice_board">
+        {% for payment in payments %}
+            <div class="notice_board" onclick="toggleDetails(this)">
+                <div class="notice_board_left">
+                    <span class="toggle-icon">⟫</span>
+                    <span>#{{ payment.pk }} {{ payment.payment_method|capfirst }}: {{ payment.total_payment_sum }} грн</span>
+                </div>
+                <div class="notice_board_right">
+                    <span>{{ payment.payment_date|date:"d m Y" }}</span>
+                </div>
+            </div>
+            <div class="details" style="display: none;">
+                <ul class="product_list">
+                    {% for payment_product in payment.payment_products.all %}
+                        <li class="product_item">
+                            <div class="product_image">
+                                <img src="{{ payment_product.product.image.image.url }}"
+                                     alt="{{ payment_product.product.product_name }}">
+                            </div>
+                            <div class="product_info">
+                                <b>{{ payment_product.product.product_name }}</b><br>
+                                {{ payment_product.product.price }} грн<br>
+                                <span class="quantity-display">
+                                    <span class="quantity-value">{{ payment_product.quantity }}</span> шт.
+                                </span>
+                                <div class="quantity-controls" style="display: none;" data-payment-product-id="{{ payment_product.id }}">
+                                    <button class="quantity-btn minus-btn" onclick="changeQuantity(this, -1)">-</button>
+                                    <span class="quantity-value">{{ payment_product.quantity }}</span>
+                                    <button class="quantity-btn plus-btn" onclick="changeQuantity(this, 1)">+</button>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button class="button-settings" onclick="toggleSettings(this)">Налаштування</button>
+            </div>
+        {% endfor %}
+    </div>
+    {% include 'includes/pagination.html' %}
+{% endblock %}
